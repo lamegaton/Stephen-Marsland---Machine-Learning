@@ -1,4 +1,3 @@
-
 # Code from Chapter 4 of Machine Learning: An Algorithmic Perspective (2nd Edition)
 # by Stephen Marsland (http://stephenmonika.net)
 
@@ -65,7 +64,7 @@ class mlp:
 
             error = 0.5*np.sum((self.outputs-targets)**2)
             if (np.mod(n,100)==0):
-                print("Iteration: "+ n +  " Error: " + error)    
+                print("Iteration: "+ str(n) +  " Error: " + str(error))    
 
             # Different types of output neurons
             if self.outtype == 'linear':
