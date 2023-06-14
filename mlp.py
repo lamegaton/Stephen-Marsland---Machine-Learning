@@ -1,5 +1,5 @@
 # Code from Chapter 4 of Machine Learning: An Algorithmic Perspective (2nd Edition)
-# by Stephen Marsland (http://stephenmonika.net)
+# by Stephen Marsland (http://stephenmonika.net) or (https://homepages.ecs.vuw.ac.nz/~marslast/MLbook.html)
 
 # You are free to use, change, or redistribute the code in any way you wish for
 # non-commercial purposes, but please maintain the name of the original author.
