@@ -23,4 +23,5 @@ validtarget = t[3::4,:]
 
 
 net = mlp.mlp(train,traintarget,3,outtype='linear')
+
 net.mlptrain(train,traintarget,0.25,101)

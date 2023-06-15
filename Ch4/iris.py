@@ -10,6 +10,10 @@
 
 # The iris classification example
 
+#np.shape(iris)
+#(150, 5), last column is the target
+
+
 def preprocessIris(infile,outfile):
 
     stext1 = 'Iris-setosa'
@@ -34,13 +38,13 @@ def preprocessIris(infile,outfile):
 
 import numpy as np
 # Preprocessor to remove the test (only needed once)
-#preprocessIris('/Users/srmarsla/Book/Datasets/Iris/iris.data','iris_proc.data')
+# preprocessIris('iris.data','iris_proc.data')
 
 iris = np.loadtxt('iris_proc.data',delimiter=',')
 iris[:,:4] = iris[:,:4]-iris[:,:4].mean(axis=0)
 imax = np.concatenate((iris.max(axis=0)*np.ones((1,5)),np.abs(iris.min(axis=0)*np.ones((1,5)))),axis=0).max(axis=0)
 iris[:,:4] = iris[:,:4]/imax[:4]
-print iris[0:5,:]
+print(iris[0:5,:])
 
 # Split into training, validation, and test sets
 target = np.zeros((np.shape(iris)[0],3));
@@ -52,7 +56,8 @@ indices = np.where(iris[:,4]==2)
 target[indices,2] = 1
 
 # Randomly order the data
-order = range(np.shape(iris)[0])
+# traint is train_target
+order = list(range(np.shape(iris)[0]))
 np.random.shuffle(order)
 iris = iris[order,:]
 target = target[order,:]
