@@ -15,17 +15,19 @@ class mlp:
     def __init__(self,inputs,targets,nhidden,beta=1,momentum=0.9,outtype='logistic'):
         """ Constructor """
         # Set up network size
-        self.nin = np.shape(inputs)[1]
-        self.nout = np.shape(targets)[1]
-        self.ndata = np.shape(inputs)[0]
-        self.nhidden = nhidden
+        self.nin = np.shape(inputs)[1]  # return row: sample
+        self.nout = np.shape(targets)[1] # return row: sample
+        self.ndata = np.shape(inputs)[0] # return col: features
+        self.nhidden = nhidden # number of hidden layer
 
         self.beta = beta
         self.momentum = momentum
         self.outtype = outtype
     
         # Initialise network
+        
         self.weights1 = (np.random.rand(self.nin+1,self.nhidden)-0.5)*2/np.sqrt(self.nin)
+        # ^ n hidden is hidden nodes
         self.weights2 = (np.random.rand(self.nhidden+1,self.nout)-0.5)*2/np.sqrt(self.nhidden)
 
     def earlystopping(self,inputs,targets,valid,validtargets,eta,niterations=100):
@@ -52,9 +54,11 @@ class mlp:
     def mlptrain(self,inputs,targets,eta,niterations):
         """ Train the thing """    
         # Add the inputs that match the bias node
-        inputs = np.concatenate((inputs,-np.ones((self.ndata,1))),axis=1)
+        inputs = np.concatenate((inputs,-np.ones(self.ndata,1)),axis=1)
+        # add bias = -1 into row
         change = range(self.ndata)
-    
+
+        # clear weights
         updatew1 = np.zeros((np.shape(self.weights1)))
         updatew2 = np.zeros((np.shape(self.weights2)))
             
@@ -90,9 +94,13 @@ class mlp:
             
     def mlpfwd(self,inputs):
         """ Run the network forward """
-
+        # x.w
         self.hidden = np.dot(inputs,self.weights1);
+        
+        # Run through activation function 1/(1 + e^-(B*x))
         self.hidden = 1.0/(1.0+np.exp(-self.beta*self.hidden))
+
+        # add bias column
         self.hidden = np.concatenate((self.hidden,-np.ones((np.shape(inputs)[0],1))),axis=1)
 
         outputs = np.dot(self.hidden,self.weights2);
