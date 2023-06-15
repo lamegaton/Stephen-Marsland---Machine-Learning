@@ -12,12 +12,13 @@ import numpy as np
 class mlp:
     """ A Multi-Layer Perceptron"""
     
-    def __init__(self,inputs,targets,nhidden,beta=1,momentum=0.9,outtype='logistic'):
+    def __init__(self,inputs,targets,nhidden,beta=1,momentum=1,outtype='logistic'):
         """ Constructor """
+        # default value for momentum is 0.9
         # Set up network size
-        self.nin = np.shape(inputs)[1]  # return row: sample
-        self.nout = np.shape(targets)[1] # return row: sample
-        self.ndata = np.shape(inputs)[0] # return col: features
+        self.nin = np.shape(inputs)[1]  # return col: feature
+        self.nout = np.shape(targets)[1] # return col: feature
+        self.ndata = np.shape(inputs)[0] # return row: sample
         self.nhidden = nhidden # number of hidden layer
 
         self.beta = beta
