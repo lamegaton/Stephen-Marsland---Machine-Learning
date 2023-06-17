@@ -10,11 +10,12 @@
 import pylab as pl
 import numpy as np
 import mlp
-import cPickle, gzip
+import _pickle as cPickle
+import gzip
 
 # Read the dataset in (code from sheet)
-f = gzip.open('../2 Linear/mnist.pkl.gz','rb')
-tset, vset, teset = cPickle.load(f)
+f = gzip.open('mnist.pkl.gz','rb')
+tset, vset, teset = cPickle.load(f,encoding='bytes')
 f.close()
 
 nread = 200
@@ -39,7 +40,7 @@ for i in range(nread):
     valid_tgt[i,vset[1][i]] = 1
 
 for i in [1,2,5,10,20]:  
-    print "----- "+str(i)  
+    print("----- "+str(i))
     net = mlp.mlp(train_in,train_tgt,i,outtype='softmax')
     net.earlystopping(train_in,train_tgt,valid_in,valid_tgt,0.1)
     net.confmat(test_in,test_tgt)

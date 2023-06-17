@@ -1,5 +1,6 @@
+
 # Code from Chapter 4 of Machine Learning: An Algorithmic Perspective (2nd Edition)
-# by Stephen Marsland (http://stephenmonika.net) or (https://homepages.ecs.vuw.ac.nz/~marslast/MLbook.html)
+# by Stephen Marsland (http://stephenmonika.net)
 
 # You are free to use, change, or redistribute the code in any way you wish for
 # non-commercial purposes, but please maintain the name of the original author.
@@ -12,23 +13,20 @@ import numpy as np
 class mlp:
     """ A Multi-Layer Perceptron"""
     
-    def __init__(self,inputs,targets,nhidden,beta=1,momentum=1,outtype='logistic'):
+    def __init__(self,inputs,targets,nhidden,beta=1,momentum=0.9,outtype='logistic'):
         """ Constructor """
-        # default value for momentum is 0.9
         # Set up network size
-        self.nin = np.shape(inputs)[1]  # return col: feature
-        self.nout = np.shape(targets)[1] # return col: feature
-        self.ndata = np.shape(inputs)[0] # return row: sample
-        self.nhidden = nhidden # number of hidden layer
+        self.nin = np.shape(inputs)[1]
+        self.nout = np.shape(targets)[1]
+        self.ndata = np.shape(inputs)[0]
+        self.nhidden = nhidden
 
         self.beta = beta
         self.momentum = momentum
         self.outtype = outtype
     
         # Initialise network
-        
         self.weights1 = (np.random.rand(self.nin+1,self.nhidden)-0.5)*2/np.sqrt(self.nin)
-        # ^ n hidden is hidden nodes
         self.weights2 = (np.random.rand(self.nhidden+1,self.nout)-0.5)*2/np.sqrt(self.nhidden)
 
     def earlystopping(self,inputs,targets,valid,validtargets,eta,niterations=100):
@@ -49,17 +47,15 @@ class mlp:
             validout = self.mlpfwd(valid)
             new_val_error = 0.5*np.sum((validtargets-validout)**2)
             
-        print("Stopped",new_val_error,old_val_error1,old_val_error2)
+        print("Stopped", new_val_error,old_val_error1, old_val_error2)
         return new_val_error
     	
     def mlptrain(self,inputs,targets,eta,niterations):
         """ Train the thing """    
         # Add the inputs that match the bias node
         inputs = np.concatenate((inputs,-np.ones((self.ndata,1))),axis=1)
-        # add bias = -1 into row
         change = range(self.ndata)
-
-        # clear weights
+    
         updatew1 = np.zeros((np.shape(self.weights1)))
         updatew2 = np.zeros((np.shape(self.weights2)))
             
@@ -69,7 +65,7 @@ class mlp:
 
             error = 0.5*np.sum((self.outputs-targets)**2)
             if (np.mod(n,100)==0):
-                print("Iteration: ",n," Error: ",error)    
+                print("Iteration: ",n, " Error: ",error)
 
             # Different types of output neurons
             if self.outtype == 'linear':
@@ -95,13 +91,9 @@ class mlp:
             
     def mlpfwd(self,inputs):
         """ Run the network forward """
-        # x.w
-        self.hidden = np.dot(inputs,self.weights1);
-        
-        # Run through activation function 1/(1 + e^-(B*x))
-        self.hidden = 1.0/(1.0+np.exp(-self.beta*self.hidden))
 
-        # add bias column
+        self.hidden = np.dot(inputs,self.weights1);
+        self.hidden = 1.0/(1.0+np.exp(-self.beta*self.hidden))
         self.hidden = np.concatenate((self.hidden,-np.ones((np.shape(inputs)[0],1))),axis=1)
 
         outputs = np.dot(self.hidden,self.weights2);
@@ -115,7 +107,7 @@ class mlp:
             normalisers = np.sum(np.exp(outputs),axis=1)*np.ones((1,np.shape(outputs)[0]))
             return np.transpose(np.transpose(np.exp(outputs))/normalisers)
         else:
-        	print("error")
+            print("error")
 
     def confmat(self,inputs,targets):
         """Confusion matrix"""
@@ -141,4 +133,4 @@ class mlp:
 
         print("Confusion matrix is:")
         print(cm)
-        print("Percentage Correct: ",np.trace(cm),"/",np.sum(cm)*100)
+        print("Percentage Correct: ",np.trace(cm)/np.sum(cm)*100)
