@@ -41,14 +41,24 @@ import numpy as np
 # preprocessIris('iris.data','iris_proc.data')
 
 iris = np.loadtxt('iris_proc.data',delimiter=',')
+# # centering data, bring it to (0,0)
+# subtract everything with its mean
 iris[:,:4] = iris[:,:4]-iris[:,:4].mean(axis=0)
-imax = np.concatenate((iris.max(axis=0)*np.ones((1,5)),np.abs(iris.min(axis=0)*np.ones((1,5)))),axis=0).max(axis=0)
+
+# find maximum value
+imax = np.concatenate((iris.max(axis=0)*np.ones((1,5)),
+                       np.abs(iris.min(axis=0)*np.ones((1,5)))),
+                      axis=0).max(axis=0)
+
 iris[:,:4] = iris[:,:4]/imax[:4]
 print(iris[0:5,:])
 
 # Split into training, validation, and test sets
+# prepare one-hot table for target
+# np.shape(iris)
+# (150, 5)
 target = np.zeros((np.shape(iris)[0],3));
-indices = np.where(iris[:,4]==0) 
+indices = np.where(iris[:,4]==0)
 target[indices,0] = 1
 indices = np.where(iris[:,4]==1)
 target[indices,1] = 1
@@ -64,8 +74,10 @@ target = target[order,:]
 
 train = iris[::2,0:4]
 traint = target[::2]
+
 valid = iris[1::4,0:4]
 validt = target[1::4]
+
 test = iris[3::4,0:4]
 testt = target[3::4]
 
@@ -74,5 +86,6 @@ testt = target[3::4]
 # Train the network
 import mlp
 net = mlp.mlp(train,traint,5,outtype='logistic')
-net.earlystopping(train,traint,valid,validt,0.1)
+net.mlptrain(train,traint,0.2,1000)
+#net.earlystopping(train,traint,valid,validt,0.1)
 net.confmat(test,testt)

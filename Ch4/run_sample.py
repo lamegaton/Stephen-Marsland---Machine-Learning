@@ -1,5 +1,6 @@
 import numpy as np
-import pylab as pl
+import pylab as pl
+
 import mlp
 
 x = np.ones((1,40))*np.linspace(0,1,40)
